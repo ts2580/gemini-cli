@@ -54,6 +54,7 @@ const manifest = {
   type: pkg.type,
   engines: pkg.engines,
   bin: pkg.bin,
+  scripts: { postinstall: 'node bundle/setup-company-models.js' },
   files: pkg.files,
   dependencies: pkg.dependencies,
   optionalDependencies: pkg.optionalDependencies,

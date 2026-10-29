@@ -417,7 +417,9 @@ export async function createContentGenerator(
       });
       return new LoggingContentGenerator(
         new ModelMappingContentGenerator(googleGenAI.models, () =>
-          getBackendModelMappings(gcConfig, false),
+          gcConfig.getExperimentalDynamicModelConfiguration?.()
+            ? {}
+            : getBackendModelMappings(gcConfig, false),
         ),
         gcConfig,
       );

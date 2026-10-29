@@ -1396,6 +1396,31 @@ describe('createContentGenerator', () => {
     );
   });
 
+  it('preserves explicitly resolved SDK model IDs with dynamic model configuration', async () => {
+    const mockModels = { generateContent: vi.fn().mockResolvedValue({}) };
+    vi.mocked(GoogleGenAI).mockImplementation(
+      () => ({ models: mockModels }) as never,
+    );
+    const generator = await createContentGenerator(
+      { authType: AuthType.USE_GEMINI, apiKey: 'test-key' },
+      Object.assign({}, mockConfig, {
+        getExperimentalDynamicModelConfiguration: () => true,
+        modelConfigService: { resolveModelId: (model: string) => model },
+        hasLatestFlashGAAccess: () => true,
+      }) as unknown as Config,
+    );
+    await generator.generateContent(
+      { model: 'gemini-3.5-flash', contents: [] },
+      'prompt-id',
+      'user' as LlmRole,
+    );
+    expect(mockModels.generateContent).toHaveBeenCalledWith(
+      expect.objectContaining({ model: 'gemini-3.5-flash' }),
+      'prompt-id',
+      'user',
+    );
+  });
+
   it('should apply model mapping for LOGIN_WITH_GOOGLE', async () => {
     const mockInnerGenerator = {
       generateContent: vi.fn().mockResolvedValue({}),

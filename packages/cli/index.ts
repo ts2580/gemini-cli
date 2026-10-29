@@ -126,6 +126,10 @@ async function run() {
   } else {
     // --- Heavy Child Process ---
     // Now we can safely import everything.
+    const { tryInitializeCompanySettings } = await import(
+      './src/config/initializeCompanySettings.js'
+    );
+    tryInitializeCompanySettings();
     const { main } = await import('./src/gemini.js');
     const { FatalError, writeToStderr } = await import(
       '@google/gemini-cli-core'
