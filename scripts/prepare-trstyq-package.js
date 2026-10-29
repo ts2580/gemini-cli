@@ -55,7 +55,8 @@ const output = mkdtempSync(join(tmpdir(), `gemini-cli-${tag}-`));
 const manifest = {
   name: '@trstyq/gemini-cli',
   version: pkg.version,
-  description: 'Gemini CLI with configurable SSE and NDJSON streaming',
+  description:
+    'Gemini CLI fork for private LLM gateways without SSE support, with NDJSON streaming and configurable model routing',
   license: 'Apache-2.0',
   repository: {
     type: 'git',
