@@ -94,6 +94,7 @@ describe('createContentGenerator', () => {
     vi.clearAllMocks();
     vi.stubEnv('ANTIGRAVITY_CLI_ALIAS', '');
     vi.stubEnv('GOOGLE_CLOUD_LOCATION', '');
+    vi.stubEnv('GEMINI_CLI_STREAM_FORMAT', undefined);
   });
 
   afterEach(() => {
@@ -121,6 +122,49 @@ describe('createContentGenerator', () => {
     );
     expect(generator).toEqual(
       new LoggingContentGenerator(mockGenerator, mockConfigWithFake),
+    );
+  });
+
+  describe.each([
+    AuthType.USE_GEMINI,
+    AuthType.USE_VERTEX_AI,
+    AuthType.GATEWAY,
+  ])('stream framing with %s authentication', (authType) => {
+    it.each([undefined, 'SSE', 'NDJSON'])(
+      'selects the parser for GEMINI_CLI_STREAM_FORMAT=%s',
+      async (format) => {
+        vi.stubEnv('GEMINI_CLI_STREAM_FORMAT', format);
+        const originalParser = vi.fn();
+        const mockGenerator = {
+          apiClient: { processStreamResponse: originalParser },
+          models: {},
+        };
+        vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
+
+        await createContentGenerator(
+          { authType, apiKey: 'test-api-key' },
+          mockConfig,
+        );
+
+        expect(mockGenerator.apiClient.processStreamResponse).toBe(
+          format === 'NDJSON' ? parseNdjsonStream : originalParser,
+        );
+      },
+    );
+
+    it.each(['ndjson', 'sse', '', 'JSON', ' NDJSON '])(
+      'rejects invalid stream format %j before SDK construction',
+      async (format) => {
+        vi.stubEnv('GEMINI_CLI_STREAM_FORMAT', format);
+
+        await expect(
+          createContentGenerator(
+            { authType, apiKey: 'test-api-key' },
+            mockConfig,
+          ),
+        ).rejects.toThrow('GEMINI_CLI_STREAM_FORMAT must be SSE or NDJSON');
+        expect(GoogleGenAI).not.toHaveBeenCalled();
+      },
     );
   });
 
@@ -1201,6 +1245,7 @@ describe('createContentGenerator', () => {
   });
 
   it('should set empty x-goog-api-key header for GATEWAY auth when apiKey is empty string', async () => {
+    vi.stubEnv('GEMINI_CLI_STREAM_FORMAT', 'NDJSON');
     const mockConfig = {
       getModel: vi.fn().mockReturnValue('gemini-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
@@ -1223,7 +1268,9 @@ describe('createContentGenerator', () => {
       mockConfig,
     );
 
-    expect(mockGenerator.apiClient.processStreamResponse).toBe(parseNdjsonStream);
+    expect(mockGenerator.apiClient.processStreamResponse).toBe(
+      parseNdjsonStream,
+    );
 
     expect(GoogleGenAI).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -1309,6 +1356,7 @@ describe('createContentGenerator', () => {
   });
 
   it('should not apply model mapping for GATEWAY', async () => {
+    vi.stubEnv('GEMINI_CLI_STREAM_FORMAT', 'NDJSON');
     const mockModels = {
       generateContent: vi.fn().mockResolvedValue({}),
     };
@@ -1335,7 +1383,9 @@ describe('createContentGenerator', () => {
       'user' as LlmRole,
     );
 
-    expect(mockGenerator.apiClient.processStreamResponse).toBe(parseNdjsonStream);
+    expect(mockGenerator.apiClient.processStreamResponse).toBe(
+      parseNdjsonStream,
+    );
 
     expect(mockModels.generateContent).toHaveBeenCalledWith(
       expect.objectContaining({
