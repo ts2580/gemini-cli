@@ -1,6 +1,6 @@
 {
   "name": "@google/gemini-cli",
-  "version": "0.67.0-nightly.20261020.gb041de017",
+  "version": "0.67.2",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -76,7 +76,8 @@
     "telemetry": "node scripts/telemetry.js",
     "check:lockfile": "node scripts/check-lockfile.js",
     "clean": "node scripts/clean.js",
-    "pre-commit": "node scripts/pre-commit.js"
+    "pre-commit": "node scripts/pre-commit.js",
+    "package:trstyq": "node scripts/prepare-trstyq-package.js"
   },
   "overrides": {
     "ink": "npm:@jrichman/ink@6.6.9",

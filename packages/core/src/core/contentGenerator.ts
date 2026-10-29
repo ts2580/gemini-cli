@@ -19,6 +19,7 @@ import * as os from 'node:os';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import { isCloudShell } from '../ide/detect-ide.js';
 import type { Config } from '../config/config.js';
+import { NdjsonGoogleGenAI } from './ndjsonGoogleGenAI.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 
 import type { UserTierId, GeminiUserTier } from '../code_assist/types.js';
@@ -382,7 +383,14 @@ export async function createContentGenerator(
         : undefined;
       const useVertex =
         config.vertexai ?? config.authType === AuthType.USE_VERTEX_AI;
-      const googleGenAI = new GoogleGenAI({
+      const streamFormat = process.env['GEMINI_CLI_STREAM_FORMAT'] ?? 'SSE';
+      if (streamFormat !== 'SSE' && streamFormat !== 'NDJSON') {
+        throw new Error('GEMINI_CLI_STREAM_FORMAT must be SSE or NDJSON');
+      }
+      // Response framing is independent of the authentication method.
+      const GenAIConstructor =
+        streamFormat === 'NDJSON' ? NdjsonGoogleGenAI : GoogleGenAI;
+      const googleGenAI = new GenAIConstructor({
         apiKey:
           config.authType === AuthType.GATEWAY
             ? config.apiKey
@@ -409,7 +417,9 @@ export async function createContentGenerator(
       });
       return new LoggingContentGenerator(
         new ModelMappingContentGenerator(googleGenAI.models, () =>
-          getBackendModelMappings(gcConfig, false),
+          gcConfig.getExperimentalDynamicModelConfiguration?.()
+            ? {}
+            : getBackendModelMappings(gcConfig, false),
         ),
         gcConfig,
       );

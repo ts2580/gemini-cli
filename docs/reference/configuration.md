@@ -2752,6 +2752,19 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
   - Example: `export GOOGLE_VERTEX_BASE_URL="https://my-vertex-proxy.com"`
     (Windows PowerShell:
     `$env:GOOGLE_VERTEX_BASE_URL="https://my-vertex-proxy.com"`)
+- **`GEMINI_CLI_STREAM_FORMAT`**:
+  - Selects streaming response framing independently of authentication for
+    `gemini-api-key`, `vertex-ai`, and `gateway` connections.
+  - Accepts uppercase `SSE` or `NDJSON` only. Defaults to `SSE` when unset;
+    other values, including lowercase and empty strings, produce an error.
+  - Use `NDJSON` for gateways that return newline-delimited JSON. Ordinary
+    non-streaming JSON generation is unaffected. Google sign-in / Code Assist
+    uses a separate transport and does not use this option.
+  - Gateway connections that previously selected NDJSON automatically must now
+    set this variable explicitly.
+  - Example: `export GEMINI_CLI_STREAM_FORMAT="NDJSON"` (Windows PowerShell:
+    `$env:GEMINI_CLI_STREAM_FORMAT="NDJSON"`). This selects the parser, not the
+    authentication method; retain your existing API key authentication settings.
 - **`OTLP_GOOGLE_CLOUD_PROJECT`**:
   - Your Google Cloud Project ID for Telemetry in Google Cloud
   - Example: `export OTLP_GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"` (Windows
