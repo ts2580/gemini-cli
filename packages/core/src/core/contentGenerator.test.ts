@@ -14,6 +14,7 @@ import {
 } from './contentGenerator.js';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import { GoogleGenAI } from '@google/genai';
+import { parseNdjsonStream } from './ndjsonGoogleGenAI.js';
 import { HttpProxyAgent } from 'http-proxy-agent';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import type { Config } from '../config/config.js';
@@ -1208,8 +1209,9 @@ describe('createContentGenerator', () => {
     } as unknown as Config;
 
     const mockGenerator = {
+      apiClient: { processStreamResponse: vi.fn() },
       models: {},
-    } as unknown as GoogleGenAI;
+    };
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
 
     await createContentGenerator(
@@ -1220,6 +1222,8 @@ describe('createContentGenerator', () => {
       },
       mockConfig,
     );
+
+    expect(mockGenerator.apiClient.processStreamResponse).toBe(parseNdjsonStream);
 
     expect(GoogleGenAI).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -1309,8 +1313,9 @@ describe('createContentGenerator', () => {
       generateContent: vi.fn().mockResolvedValue({}),
     };
     const mockGenerator = {
+      apiClient: { processStreamResponse: vi.fn() },
       models: mockModels,
-    } as unknown as GoogleGenAI;
+    };
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
 
     const generator = await createContentGenerator(
@@ -1329,6 +1334,8 @@ describe('createContentGenerator', () => {
       'prompt-id',
       'user' as LlmRole,
     );
+
+    expect(mockGenerator.apiClient.processStreamResponse).toBe(parseNdjsonStream);
 
     expect(mockModels.generateContent).toHaveBeenCalledWith(
       expect.objectContaining({
