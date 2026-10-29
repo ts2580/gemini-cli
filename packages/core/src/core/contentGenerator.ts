@@ -383,9 +383,13 @@ export async function createContentGenerator(
         : undefined;
       const useVertex =
         config.vertexai ?? config.authType === AuthType.USE_VERTEX_AI;
-      // Company gateways return NDJSON for streaming responses.
+      const streamFormat = process.env['GEMINI_CLI_STREAM_FORMAT'] ?? 'SSE';
+      if (streamFormat !== 'SSE' && streamFormat !== 'NDJSON') {
+        throw new Error('GEMINI_CLI_STREAM_FORMAT must be SSE or NDJSON');
+      }
+      // Response framing is independent of the authentication method.
       const GenAIConstructor =
-        config.authType === AuthType.GATEWAY ? NdjsonGoogleGenAI : GoogleGenAI;
+        streamFormat === 'NDJSON' ? NdjsonGoogleGenAI : GoogleGenAI;
       const googleGenAI = new GenAIConstructor({
         apiKey:
           config.authType === AuthType.GATEWAY

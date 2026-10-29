@@ -103,7 +103,7 @@ export async function* parseNdjsonStream(
 }
 
 /**
- * Gateway transport adaptation. Ordinary generateContent() continues to use
+ * NDJSON transport adaptation. Ordinary generateContent() continues to use
  * the official SDK unchanged; only streaming response framing is replaced.
  */
 export class NdjsonGoogleGenAI extends GoogleGenAI {
