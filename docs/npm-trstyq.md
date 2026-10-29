@@ -5,12 +5,12 @@ Gemini CLI 포크. 스트리밍 응답 형식을 인증 방식과 별도로 선�
 ## 설치
 
 ```sh
-npm install -g @trstyq/gemini-cli@ca
+npm install -g @trstyq/gemini-cli@latest
 gemini --version
 ```
 
-0.67.2 패키지의 배포 채널은 `ca`입니다. 위 명령은 npm 발행 후 사용할 수
-있습니다.
+0.67.2 정식 패키지의 배포 채널은 `latest`입니다. 위 명령은 npm 발행 후 사용할 수
+있습니다. Canary 채널은 `@ca`로 별도 설치할 수 있습니다.
 
 ## 회사 모델 기본 설정
 
@@ -89,17 +89,18 @@ API 키, 주소, API 버전 및 추가 헤더 값은 사용하는 Gateway 규칙
 소스를 커밋한 뒤 저장소 루트에서 실행합니다.
 
 ```sh
-npm run package:trstyq
+npm run package:trstyq -- --tag latest
 ```
 
 명령은 번들을 새로 빌드하고 임시 디렉터리에 tarball, `SHA256SUMS`,
 `release.json`을 생성합니다. `release.json`에는 소스 커밋과 npm 무결성 값이
-포함됩니다. 자동 발행은 수행하지 않습니다.
+포함됩니다. 자동 발행은 수행하지 않습니다. `--tag`를 생략하면 기존 Canary 채널인
+`ca`로 준비합니다.
 
 발행 시 준비된 tarball을 명시합니다.
 
 ```sh
-npm publish /path/to/trstyq-gemini-cli-0.67.2.tgz --tag ca --access public --ignore-scripts
+npm publish /path/to/trstyq-gemini-cli-0.67.2.tgz --tag latest --access public --ignore-scripts
 ```
 
 소스: https://github.com/ts2580/gemini-cli

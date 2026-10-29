@@ -18,6 +18,16 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
+if (
+  args.length !== 0 &&
+  (args.length !== 2 ||
+    args[0] !== '--tag' ||
+    !['ca', 'latest'].includes(args[1]))
+) {
+  throw new Error('Usage: npm run package:trstyq -- [--tag ca|latest]');
+}
+const tag = args[1] ?? 'ca';
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const runNpm = (args, cwd = root) =>
   execFileSync(npm, args, { cwd, stdio: 'inherit' });
@@ -41,7 +51,7 @@ runNpm(['run', 'generate']);
 runNpm(['run', 'build', '--workspace', '@google/gemini-cli-core']);
 runNpm(['run', 'bundle']);
 
-const output = mkdtempSync(join(tmpdir(), 'gemini-cli-ca-'));
+const output = mkdtempSync(join(tmpdir(), `gemini-cli-${tag}-`));
 const manifest = {
   name: '@trstyq/gemini-cli',
   version: pkg.version,
@@ -60,7 +70,7 @@ const manifest = {
   optionalDependencies: pkg.optionalDependencies,
   publishConfig: {
     access: 'public',
-    tag: 'ca',
+    tag,
     registry: 'https://registry.npmjs.org/',
   },
   gitHead: sourceCommit,
@@ -89,7 +99,7 @@ writeFileSync(
     {
       name: manifest.name,
       version: manifest.version,
-      tag: 'ca',
+      tag,
       sourceCommit,
       filename: tarball.filename,
       integrity: tarball.integrity,
