@@ -105,15 +105,15 @@
         "enableAutoUpdate": {
           "title": "Enable Auto Update",
           "description": "Enable automatic updates.",
-          "markdownDescription": "Enable automatic updates.\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `true`",
-          "default": true,
+          "markdownDescription": "Enable automatic updates.\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `false`",
+          "default": false,
           "type": "boolean"
         },
         "enableAutoUpdateNotification": {
           "title": "Enable Auto Update Notification",
           "description": "Enable update notification prompts.",
-          "markdownDescription": "Enable update notification prompts.\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `true`",
-          "default": true,
+          "markdownDescription": "Enable update notification prompts.\n\n- Category: `General`\n- Requires restart: `no`\n- Default: `false`",
+          "default": false,
           "type": "boolean"
         },
         "enableNotifications": {
