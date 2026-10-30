@@ -150,6 +150,27 @@ export GEMINI_API_KEY="YOUR_API_KEY"
 gemini
 ```
 
+For Windows PowerShell:
+
+```powershell
+$env:GEMINI_API_KEY = "YOUR_API_KEY"
+gemini
+```
+
+For private gateways, set `GEMINI_API_KEY` to your gateway API key and follow
+the [gateway configuration examples](docs/npm-trstyq.md#게이트웨이-환경변수).
+
+If your gateway requires a Bearer token in a custom header, replace `<token>`
+with your gateway token:
+
+```bash
+export GEMINI_CLI_CUSTOM_HEADERS="Authorization: Bearer <token>"
+```
+
+```powershell
+$env:GEMINI_CLI_CUSTOM_HEADERS = "Authorization: Bearer <token>"
+```
+
 ### Option 3: Vertex AI
 
 **✨ Best for:** Enterprise teams and production workloads
