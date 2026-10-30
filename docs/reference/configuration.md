@@ -148,12 +148,12 @@ their corresponding top-level category object in your `settings.json` file.
 - **`general.enableAutoUpdate`** (boolean):
 
   - **Description:** Enable automatic updates.
-  - **Default:** `true`
+  - **Default:** `false`
 
 - **`general.enableAutoUpdateNotification`** (boolean):
 
   - **Description:** Enable update notification prompts.
-  - **Default:** `true`
+  - **Default:** `false`
 
 - **`general.enableNotifications`** (boolean):
 

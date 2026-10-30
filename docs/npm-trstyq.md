@@ -27,39 +27,48 @@ gemini --version
 
 정식 배포 채널은 `latest`입니다. Canary 채널은 `@ca`로 별도 설치할 수 있습니다.
 
+자동 업데이트와 업데이트 알림은 기본적으로 꺼져 있습니다. 수동 업데이트는
+`npm install -g @trstyq/gemini-cli@latest`로 진행합니다. 두 기능을 모두 켜면
+`@trstyq/gemini-cli`의 새 버전을 확인하고 자동으로 업데이트합니다.
+
 ## 게이트웨이 환경변수
 
 CLI를 실행하기 전에 게이트웨이 환경에 맞게 다음 환경변수를 설정하세요.
 
-| 환경변수                    | 용도                                                         | 예시 값                                       |
-| --------------------------- | ------------------------------------------------------------ | --------------------------------------------- |
-| `GOOGLE_GEMINI_BASE_URL`    | Gemini API 요청을 보낼 게이트웨이의 베이스 URL               | `https://llm-gateway.example.com/gemini`      |
-| `GOOGLE_GENAI_API_VERSION`  | 게이트웨이가 지원하는 API 버전                               | `v1beta`                                      |
-| `GEMINI_CLI_CUSTOM_HEADERS` | 요청에 추가할 커스텀 HTTP 헤더                               | `X-Client-Id:gemini-cli,X-Project:my-project` |
-| `GEMINI_CLI_STREAM_FORMAT`  | 스트리밍 응답 형식. NDJSON 게이트웨이는 대문자 `NDJSON` 지정 | `NDJSON`                                      |
+| 환경변수                    | 용도                                                         | 예시 값                                                |
+| --------------------------- | ------------------------------------------------------------ | ------------------------------------------------------ |
+| `GEMINI_API_KEY`            | Gemini API 키 인증에 사용할 게이트웨이 API 키                | `YOUR_GATEWAY_API_KEY`                                 |
+| `GOOGLE_GEMINI_BASE_URL`    | Gemini API 요청을 보낼 게이트웨이의 베이스 URL               | `https://llm-gateway.example.com/gemini`               |
+| `GOOGLE_GENAI_API_VERSION`  | 게이트웨이가 지원하는 API 버전                               | `v1beta`                                               |
+| `GEMINI_CLI_CUSTOM_HEADERS` | 요청에 추가할 커스텀 HTTP 헤더                               | `Authorization: Bearer <token>,X-Client-Id:gemini-cli` |
+| `GEMINI_CLI_STREAM_FORMAT`  | 스트리밍 응답 형식. NDJSON 게이트웨이는 대문자 `NDJSON` 지정 | `NDJSON`                                               |
 
 Linux / macOS (Bash, Zsh):
 
 ```sh
+export GEMINI_API_KEY="YOUR_GATEWAY_API_KEY"
 export GOOGLE_GEMINI_BASE_URL="https://llm-gateway.example.com/gemini"
 export GOOGLE_GENAI_API_VERSION="v1beta"
-export GEMINI_CLI_CUSTOM_HEADERS="X-Client-Id:gemini-cli,X-Project:my-project"
+export GEMINI_CLI_CUSTOM_HEADERS="Authorization: Bearer <token>,X-Client-Id:gemini-cli,X-Project:my-project"
 export GEMINI_CLI_STREAM_FORMAT="NDJSON"
 ```
 
 Windows PowerShell:
 
 ```powershell
+$env:GEMINI_API_KEY = "YOUR_GATEWAY_API_KEY"
 $env:GOOGLE_GEMINI_BASE_URL = "https://llm-gateway.example.com/gemini"
 $env:GOOGLE_GENAI_API_VERSION = "v1beta"
-$env:GEMINI_CLI_CUSTOM_HEADERS = "X-Client-Id:gemini-cli,X-Project:my-project"
+$env:GEMINI_CLI_CUSTOM_HEADERS = "Authorization: Bearer <token>,X-Client-Id:gemini-cli,X-Project:my-project"
 $env:GEMINI_CLI_STREAM_FORMAT = "NDJSON"
 ```
 
-URL, 버전, 헤더 이름과 값은 예시이므로 실제 게이트웨이 설정으로 바꾸세요. 커스텀
-헤더는 `헤더명:값` 형식이며, 여러 개는 쉼표로 구분합니다. 추가 헤더가 필요하지
-않으면 `GEMINI_CLI_CUSTOM_HEADERS`는 생략할 수 있습니다. API 키 등 인증 정보는
-게이트웨이가 요구하는 방식으로 별도로 설정합니다.
+API 키, URL, 버전, 헤더 이름과 값은 예시이므로 실제 게이트웨이 설정으로
+바꾸세요. 커스텀 헤더는 `헤더명:값` 형식이며, 여러 개는 쉼표로 구분합니다. 추가
+헤더가 필요하지 않으면 `GEMINI_CLI_CUSTOM_HEADERS`는 생략할 수 있습니다.
+
+`Authorization: Bearer <token>`의 `<token>`은 게이트웨이에서 발급받은 실제
+토큰으로 바꾸세요. 인증 헤더 형식은 게이트웨이 요구사항에 맞춰 설정합니다.
 
 위 명령은 현재 터미널 세션에 적용됩니다. 계속 사용하려면 Bash의 `~/.bashrc`,
 Zsh의 `~/.zshrc` 또는 Windows 사용자 환경변수에 등록하고 새 터미널을 여세요.
