@@ -1,5 +1,21 @@
 # Gemini CLI
 
+## 포크 버전 및 원본 반영 정책
+
+`@trstyq/gemini-cli`의 포크 버전 `0.67.5`는 원본
+[`google-gemini/gemini-cli`의 `v0.67.0`](https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0)을
+반영합니다. 이미 포함된 원본 기능·버그 수정을 확인하고, 샌드박스 이미지 참조를
+정식 `0.67.0`으로 갱신했습니다. NDJSON 스트리밍, 모델 초기 설정·Auto 라우팅,
+자동 업데이트 기본 비활성화 등 포크의 기존 기능은 유지합니다.
+
+앞으로 포크는 반영한 원본 프로젝트의 메이저·마이너 버전(`major.minor`)을
+유지하고, 포크 자체 변경은 패치 버전만 올립니다. 예를 들어 원본 `0.67.x`를
+반영하는 동안 포크는 `0.67.x`를 유지하며, 원본 `0.68.x` 반영 시 `0.68.x`로
+전환합니다. 포크 패치 번호는 원본 패치 번호와 독립적으로 관리하며, 각 버전에서
+반영한 원본 태그를 명시합니다.
+
+설치 및 게이트웨이 설정은 [포크 패키지 안내](docs/npm-trstyq.md)를 참고하세요.
+
 [![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
 [![Gemini CLI E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
 [![Version](https://img.shields.io/npm/v/@google/gemini-cli)](https://www.npmjs.com/package/@google/gemini-cli)
